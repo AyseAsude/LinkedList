@@ -1,13 +1,10 @@
 #include "mylinkedlist.h"
 
 
+void readFile(const char *filename, int flag,char *targetname, char r_flag, char n_flag, char p_flag);
+
 int main(int argc, char const *argv[]) {
 
-
-    addFirst("ayşe", 1, 2.0, 17000);
-    printForward();
-    addLast("tuğrul",1,3.4,9000);
-    printForward();
     if(argc == 0){
       printf("%s\n", "Please type the file name");
       return -1;
@@ -100,3 +97,62 @@ int main(int argc, char const *argv[]) {
 
     return 0;
   }
+
+  void readFile(const char *filename, int flag,char *targetname, char r_flag, char n_flag, char p_flag){
+
+    FILE *fPtr = fopen(filename, "r");
+
+    //buffer to hold a line of file
+    char * line = (char *)malloc(150*sizeof(char));
+
+    int NUMOFLINES = 0;
+    while(fgets(line,149,fPtr) != NULL){
+      NUMOFLINES++;
+    }
+    fclose(fPtr);
+
+
+    FILE *fptr = fopen(filename, "r");
+
+    //check if file exists.
+    if(fptr == NULL){
+        printf("%s\n", "Error opening file.");
+        return ;
+    }
+
+    Node * headMale;
+    Node * headFemale;
+    Node * tailMale;
+    Node * tailFemale;
+
+    //reading lines from file
+    while((fgets(line,149,fptr)) != NULL){
+      //printf("%s\n",line);
+
+      //allocate memory for strings.
+      char * rank = (char *)malloc(2*sizeof(char));
+      char * malename = (char *)malloc(15*sizeof(char));
+      char * malenumber = (char *)malloc(7*sizeof(char));
+      char * femalename = (char *)malloc(15*sizeof(char));
+      char * femalenumber = (char *)malloc(7*sizeof(char));
+
+      //divide the line by tab character.
+      sscanf(line, "%s\t%s\t%s\t%s\t%s\n",rank,malename,malenumber,femalename,femalenumber);
+      //printf("%s  %s  %s  %s  %s\n",rank,malename,malenumber,femalename,femalenumber);
+
+      addLast(&headMale, &tailMale, malename, atoi(rank), atoi(malenumber));
+      addLast(&headFemale, &tailFemale, femalename, atoi(rank), atoi(femalenumber));
+
+
+      //deallocate memory
+      free(rank);
+      free(malename);
+      free(malenumber);
+      free(femalename);
+      free(femalenumber);
+    }
+
+
+    printForward(&headMale);
+    printForward(&headFemale);
+}

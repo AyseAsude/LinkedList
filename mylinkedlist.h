@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 struct popularname{
   char *name;
@@ -16,7 +17,7 @@ struct node{
 typedef struct node Node;
 typedef struct popularname PopName;
 
-Node * makenode(char * name, int rank, double percentage, int numOfBabies);
-void addFirst(char *name, int rank, double percentage, int numOfBabies);
-void addLast(char * name, int rank, double percentage, int numOfBabies);
-void printForward();
+Node * makenode(char * name, int rank, int numOfBabies);
+void addFirst(Node * head, Node * tail , char *name, int rank, int numOfBabies);
+void addLast(Node ** head, Node ** tail, char * name, int rank, int numOfBabies);
+void printForward(Node ** head);
