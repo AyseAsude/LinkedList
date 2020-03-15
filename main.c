@@ -94,7 +94,6 @@ int main(int argc, char const *argv[]) {
     free(flags);
     free(target_name);
 
-
     return 0;
   }
 
@@ -120,10 +119,8 @@ int main(int argc, char const *argv[]) {
         return ;
     }
 
-    Node * headMale;
-    Node * headFemale;
-    Node * tailMale;
-    Node * tailFemale;
+    Node * headMale = NULL;
+    Node * headFemale = NULL;
 
     //reading lines from file
     while((fgets(line,149,fptr)) != NULL){
@@ -140,9 +137,8 @@ int main(int argc, char const *argv[]) {
       sscanf(line, "%s\t%s\t%s\t%s\t%s\n",rank,malename,malenumber,femalename,femalenumber);
       //printf("%s  %s  %s  %s  %s\n",rank,malename,malenumber,femalename,femalenumber);
 
-      addLast(&headMale, &tailMale, malename, atoi(rank), atoi(malenumber));
-      addLast(&headFemale, &tailFemale, femalename, atoi(rank), atoi(femalenumber));
-
+      add(&headMale, malename, atoi(rank), atoi(malenumber));
+      add(&headFemale, femalename, atoi(rank), atoi(femalenumber));
 
       //deallocate memory
       free(rank);
@@ -151,8 +147,9 @@ int main(int argc, char const *argv[]) {
       free(femalename);
       free(femalenumber);
     }
+    addPercentages(&headMale);
+    addPercentages(&headFemale);
 
-
-    printForward(&headMale);
-    printForward(&headFemale);
+    //  printForward(&headMale);
+    //  printForward(&headFemale);
 }
