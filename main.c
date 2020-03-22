@@ -6,6 +6,8 @@ void readFile(const char *filename, int flag,char *targetname, char r_flag, char
 void print_v_flag(Node **head, char *targetname,char r_flag, char n_flag, char p_flag);
 void print_s_flag(Node **head,char *targetname, char r_flag, char n_flag, char p_flag );
 char * strlwr(char *str);
+void freeStrings(Node **head);
+
 int main(int argc, char const *argv[]) {
 
     if(argc == 0){
@@ -60,9 +62,8 @@ int main(int argc, char const *argv[]) {
 
         // gets -r -n -p arguments
         if(after_target == '1'  && strstr(argv[i],".txt") == NULL){
-          //printf("%s\n", argv[i]);
-          if(strchr(argv[i],'-') != NULL ){
 
+          if(strchr(argv[i],'-') != NULL ){
             if(strchr(argv[i],'r') != NULL){
               r_flag = '1';
             }
@@ -73,21 +74,23 @@ int main(int argc, char const *argv[]) {
               p_flag = '1';
             }
           }
+
         }
 
 
         //get file name
         if(strstr(argv[i],".txt") != NULL && strchr(argv[i],'-') == NULL){
+
           if(strchr(argv[i-1],'-') == NULL && strstr(argv[i-1],".txt") == NULL ){
             r_flag = '1';
             n_flag = '1';
             p_flag = '1';
           }
           //printf("%c %c %c", r_flag,n_flag, p_flag);
-          if(s_flag == '1'){
-            readFile(argv[i],1,target_name,r_flag,n_flag, p_flag);
-          }else if(v_flag == '1'){
+          if(v_flag == '1'){
             readFile(argv[i],0,target_name,r_flag,n_flag, p_flag);
+          }else if(s_flag == '1'){
+            readFile(argv[i],1,target_name,r_flag,n_flag, p_flag);
           }
         }
 
@@ -134,6 +137,7 @@ int main(int argc, char const *argv[]) {
       sscanf(line, "%s\t%s\t%s\t%s\t%s\n",rank,malename,malenumber,femalename,femalenumber);
       //printf("%s  %s  %s  %s  %s\n",rank,malename,malenumber,femalename,femalenumber);
 
+      //append new data
       add(&headMale, malename, atoi(rank), atoi(malenumber));
       add(&headFemale, femalename, atoi(rank), atoi(femalenumber));
 
@@ -156,6 +160,20 @@ int main(int argc, char const *argv[]) {
       print_v_flag(&headFemale,targetname,r_flag,n_flag, p_flag);
     }
 
+
+    //free strings of linked lists
+    freeStrings(&headMale);
+    freeStrings(&headFemale);
+
+    fclose(fptr);
+}
+
+void freeStrings(Node **head){
+    Node *current = *head;
+    while(current != NULL){
+      free(current -> data.name);
+      current = current -> next;
+    }
 }
 
 void print_s_flag(Node **head,char *targetname, char r_flag, char n_flag, char p_flag ){
@@ -164,7 +182,7 @@ void print_s_flag(Node **head,char *targetname, char r_flag, char n_flag, char p
 
   while(current != NULL){
 
-      if(strcmp(strlwr(current -> data.name),strlwr(targetname)) == 0){
+      if(strcmp(strlwr(current -> data.name),strlwr(targetname)) == 0){  // if strings are equal
 
         if(r_flag == '1'){
           printf("rank: %d\n", current -> data.rank);
@@ -189,7 +207,7 @@ void print_v_flag(Node **head, char *targetname,char r_flag, char n_flag, char p
 
   while(current != NULL){
 
-    if(strstr(strlwr(current -> data.name),strlwr(targetname))){
+    if(strstr(strlwr(current -> data.name),strlwr(targetname))){ // if current node's data contains targetname
 
       if(r_flag == '1'){
         printf("rank: %d\n", current -> data.rank);
