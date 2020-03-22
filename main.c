@@ -1,12 +1,15 @@
 #include "mylinkedlist.h"
+#include <ctype.h>
 
 
 void readFile(const char *filename, int flag,char *targetname, char r_flag, char n_flag, char p_flag);
-
+void print_v_flag(Node **head, char *targetname,char r_flag, char n_flag, char p_flag);
+void print_s_flag(Node **head,char *targetname, char r_flag, char n_flag, char p_flag );
+char * strlwr(char *str);
 int main(int argc, char const *argv[]) {
 
     if(argc == 0){
-      printf("%s\n", "Please type the file name");
+      printf("%s\n", "Please type the arguments");
       return -1;
     }
 
@@ -72,9 +75,10 @@ int main(int argc, char const *argv[]) {
           }
         }
 
+
         //get file name
         if(strstr(argv[i],".txt") != NULL && strchr(argv[i],'-') == NULL){
-          if(strchr(argv[i-1],'-') == NULL){
+          if(strchr(argv[i-1],'-') == NULL && strstr(argv[i-1],".txt") == NULL ){
             r_flag = '1';
             n_flag = '1';
             p_flag = '1';
@@ -99,16 +103,9 @@ int main(int argc, char const *argv[]) {
 
   void readFile(const char *filename, int flag,char *targetname, char r_flag, char n_flag, char p_flag){
 
-    FILE *fPtr = fopen(filename, "r");
 
     //buffer to hold a line of file
     char * line = (char *)malloc(150*sizeof(char));
-
-    int NUMOFLINES = 0;
-    while(fgets(line,149,fPtr) != NULL){
-      NUMOFLINES++;
-    }
-    fclose(fPtr);
 
 
     FILE *fptr = fopen(filename, "r");
@@ -147,9 +144,77 @@ int main(int argc, char const *argv[]) {
       free(femalename);
       free(femalenumber);
     }
+
     addPercentages(&headMale);
     addPercentages(&headFemale);
 
-    //  printForward(&headMale);
-    //  printForward(&headFemale);
+    if(flag == 1){
+      print_s_flag(&headMale,targetname,r_flag,n_flag, p_flag);
+      print_s_flag(&headFemale,targetname,r_flag,n_flag, p_flag);
+    }else{
+      print_v_flag(&headMale,targetname,r_flag,n_flag, p_flag);
+      print_v_flag(&headFemale,targetname,r_flag,n_flag, p_flag);
+    }
+
+}
+
+void print_s_flag(Node **head,char *targetname, char r_flag, char n_flag, char p_flag ){
+
+  Node *current = *head;
+
+  while(current != NULL){
+
+      if(strcmp(strlwr(current -> data.name),strlwr(targetname)) == 0){
+
+        if(r_flag == '1'){
+          printf("rank: %d\n", current -> data.rank);
+        }
+
+        if(n_flag == '1'){
+          printf("Usage: %d\n", current -> data.numOfBabies );
+        }
+
+        if(p_flag == '1'){
+          printf("percentage: %f\n", current -> data.percentage );
+        }
+      }
+
+      current = current -> next;
+  }
+}
+
+
+void print_v_flag(Node **head, char *targetname,char r_flag, char n_flag, char p_flag){
+  Node *current = *head;
+
+  while(current != NULL){
+
+    if(strstr(strlwr(current -> data.name),strlwr(targetname))){
+
+      if(r_flag == '1'){
+        printf("rank: %d\n", current -> data.rank);
+      }
+
+      if(n_flag == '1'){
+        printf("Usage: %d\n", current -> data.numOfBabies );
+      }
+
+      if(p_flag == '1'){
+        printf("percentage: %f\n", current -> data.percentage );
+      }
+    }
+    current = current -> next;
+  }
+
+}
+
+char * strlwr(char *str){
+  unsigned char *p = (unsigned char *)str;
+
+  while (*p) {
+     *p = tolower((unsigned char)*p);
+      p++;
+  }
+
+  return str;
 }
