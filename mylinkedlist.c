@@ -4,6 +4,7 @@
 Node * makenode(char * name, int rank, int numOfBabies){
     Node *new;
     if ( (new = (Node *) malloc( sizeof(Node) ) )!= NULL) {
+      //dynamic allocation for strings
       new -> data.name = malloc(sizeof(char) *20);
       strcpy(new -> data.name, name);
       new -> data.rank = rank;
